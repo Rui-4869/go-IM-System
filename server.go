@@ -76,8 +76,8 @@ func (this *Server) Handler(conn net.Conn) {
 				fmt.Println("Conn Read error:", err)
 				return
 			}
-			//提取用户消息(去除'\n')
-			msg := string(buf[:n-1])
+			//提取用户消息(windows系统的ncat提取消息时去除'\r\n')
+			msg := string(buf[:n-2])
 			//用户针对msg进行消息处理
 			user.DoMessage(msg)
 			//用户的任意消息，代表当前用户是一个活跃的用户
@@ -91,7 +91,7 @@ func (this *Server) Handler(conn net.Conn) {
 			case <-isLive:
 				//当前用户是一个活跃的用户，应该重置定时器
 				//不做任何事情，为了激活select重置select的定时器
-			case <-time.After(time.Second * 10):
+			case <-time.After(time.Second * 300):
 				//已经超时
 				//将当前User强制关闭
 				user.SendMsg("你被踢了")
