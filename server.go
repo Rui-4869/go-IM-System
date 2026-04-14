@@ -76,8 +76,8 @@ func (this *Server) Handler(conn net.Conn) {
 				fmt.Println("Conn Read error:", err)
 				return
 			}
-			//提取用户消息(windows系统的ncat提取消息时去除'\r\n')
-			msg := string(buf[:n-2])
+			//提取用户消息(提取消息时去除'\n')
+			msg := string(buf[:n-1])
 			//用户针对msg进行消息处理
 			user.DoMessage(msg)
 			//用户的任意消息，代表当前用户是一个活跃的用户
